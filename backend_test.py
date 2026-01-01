@@ -28,7 +28,7 @@ class TSMarketAPITester:
             print(f"❌ {name} - {details}")
             self.failed_tests.append({"test": name, "error": details})
 
-    def make_request(self, method, endpoint, data=None, headers=None, token=None):
+    def make_request(self, method, endpoint, data=None, headers=None, token=None, params=None):
         """Make HTTP request with proper error handling"""
         url = f"{self.base_url}/api/{endpoint}"
         
@@ -40,13 +40,13 @@ class TSMarketAPITester:
         
         try:
             if method == 'GET':
-                response = self.session.get(url, headers=request_headers)
+                response = self.session.get(url, headers=request_headers, params=params)
             elif method == 'POST':
-                response = self.session.post(url, json=data, headers=request_headers)
+                response = self.session.post(url, json=data, headers=request_headers, params=params)
             elif method == 'PUT':
-                response = self.session.put(url, json=data, headers=request_headers)
+                response = self.session.put(url, json=data, headers=request_headers, params=params)
             elif method == 'DELETE':
-                response = self.session.delete(url, headers=request_headers)
+                response = self.session.delete(url, headers=request_headers, params=params)
             
             return response
         except Exception as e:
