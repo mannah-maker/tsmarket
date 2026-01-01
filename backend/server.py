@@ -153,6 +153,31 @@ class TopUpCodeCreate(BaseModel):
     code: str
     amount: float
 
+# New TopUp Request model for card-based payments
+class TopUpRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    request_id: str = Field(default_factory=lambda: f"req_{uuid.uuid4().hex[:12]}")
+    user_id: str
+    user_name: str
+    user_email: str
+    amount: float
+    receipt_url: str  # URL to uploaded receipt image
+    status: str = "pending"  # pending, approved, rejected
+    admin_note: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    processed_at: Optional[datetime] = None
+
+class TopUpRequestCreate(BaseModel):
+    amount: float
+    receipt_url: str
+
+class AdminSettings(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    settings_id: str = "admin_settings"
+    card_number: str = ""
+    card_holder: str = ""
+    additional_info: str = ""
+
 class Reward(BaseModel):
     model_config = ConfigDict(extra="ignore")
     reward_id: str = Field(default_factory=lambda: f"rew_{uuid.uuid4().hex[:12]}")
