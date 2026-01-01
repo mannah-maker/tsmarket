@@ -518,6 +518,51 @@ export const Admin = () => {
                 </Button>
               </div>
             </div>
+
+            {/* Admin Profile Settings */}
+            <div className="admin-card" data-testid="admin-profile-settings">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
+                <User className="w-5 h-5" />
+                Мой профиль / Профили ман
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <Label>Имя / Ном</Label>
+                  <Input
+                    value={adminName}
+                    onChange={(e) => setAdminName(e.target.value)}
+                    className="admin-input"
+                    placeholder="Admin"
+                    data-testid="admin-name-input"
+                  />
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    className="admin-input"
+                    placeholder="admin@example.com"
+                    data-testid="admin-email-input"
+                  />
+                </div>
+                <div>
+                  <Label>Новый пароль / Рамзи нав (оставьте пустым если не меняете)</Label>
+                  <Input
+                    type="password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    className="admin-input"
+                    placeholder="••••••••"
+                    data-testid="admin-password-input"
+                  />
+                </div>
+                <Button onClick={handleSaveAdminProfile} className="w-full bg-blue-600 hover:bg-blue-700" data-testid="save-profile-btn">
+                  Сохранить профиль / Нигоҳ доштани профил
+                </Button>
+              </div>
+            </div>
           </TabsContent>
 
           {/* Users Tab */}
