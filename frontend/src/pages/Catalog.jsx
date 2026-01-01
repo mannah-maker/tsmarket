@@ -191,9 +191,9 @@ export const Catalog = () => {
                 <label className="text-sm font-bold mb-3 block">Categories</label>
                 <div className="space-y-2">
                   <button
-                    onClick={() => setCategory('')}
+                    onClick={() => setCategory('all')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      !category ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+                      category === 'all' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
                     }`}
                     data-testid="filter-all"
                   >
