@@ -233,10 +233,6 @@ export const Admin = () => {
       toast.error(error.response?.data?.detail || 'Failed to update profile');
     }
   };
-    } catch (error) {
-      toast.error('Failed to save settings');
-    }
-  };
 
   // User management handlers
   const handleToggleAdmin = async (userId, currentStatus) => {
