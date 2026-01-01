@@ -312,6 +312,151 @@ class TSMarketAPITester:
         else:
             self.log_test("Get top-up codes", False, f"Status: {codes_response.status_code if codes_response else 'No response'}")
 
+    def test_new_card_topup_system(self):
+        """Test new card-based top-up system"""
+        print("\n💳 Testing Card-based Top-up System...")
+        
+        # Test get topup settings (public endpoint)
+        response = self.make_request('GET', 'topup/settings')
+        if response and response.status_code == 200:
+            settings = response.json()
+            if 'card_number' in settings:
+                self.log_test("Get topup settings", True)
+                print(f"   Card number: {settings.get('card_number', 'Not set')}")
+            else:
+                self.log_test("Get topup settings", False, "Invalid settings format")
+        else:
+            self.log_test("Get topup settings", False, f"Status: {response.status_code if response else 'No response'}")
+        
+        if not self.user_token:
+            self.log_test("Card topup (no user token)", False, "User not logged in")
+            return False
+        
+        # Test create topup request
+        request_data = {
+            "amount": 1000,
+            "receipt_url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+        }
+        
+        response = self.make_request('POST', 'topup/request', request_data, token=self.user_token)
+        if response and response.status_code in [200, 201]:
+            request_result = response.json()
+            if 'request_id' in request_result:
+                self.log_test("Create topup request", True)
+                self.test_request_id = request_result['request_id']
+            else:
+                self.log_test("Create topup request", False, "Invalid request format")
+        else:
+            self.log_test("Create topup request", False, f"Status: {response.status_code if response else 'No response'}")
+        
+        # Test get user topup requests
+        response = self.make_request('GET', 'topup/requests', token=self.user_token)
+        if response and response.status_code == 200:
+            requests_list = response.json()
+            if isinstance(requests_list, list):
+                self.log_test("Get user topup requests", True)
+            else:
+                self.log_test("Get user topup requests", False, "Invalid requests format")
+        else:
+            self.log_test("Get user topup requests", False, f"Status: {response.status_code if response else 'No response'}")
+
+    def test_admin_card_settings(self):
+        """Test admin card settings management"""
+        print("\n⚙️ Testing Admin Card Settings...")
+        
+        if not self.admin_token:
+            self.log_test("Admin card settings (no admin token)", False, "Admin not logged in")
+            return False
+        
+        # Test get admin settings
+        response = self.make_request('GET', 'admin/settings', token=self.admin_token)
+        if response and response.status_code == 200:
+            settings = response.json()
+            self.log_test("Get admin settings", True)
+        else:
+            self.log_test("Get admin settings", False, f"Status: {response.status_code if response else 'No response'}")
+        
+        # Test update admin settings
+        settings_data = {
+            "card_number": "1234 5678 9012 3456",
+            "card_holder": "TSMarket Admin",
+            "additional_info": "Test bank info"
+        }
+        
+        response = self.make_request('PUT', 'admin/settings', settings_data, token=self.admin_token)
+        if response and response.status_code == 200:
+            self.log_test("Update admin settings", True)
+        else:
+            self.log_test("Update admin settings", False, f"Status: {response.status_code if response else 'No response'}")
+
+    def test_admin_topup_requests_management(self):
+        """Test admin topup requests management"""
+        print("\n📋 Testing Admin Topup Requests Management...")
+        
+        if not self.admin_token:
+            self.log_test("Admin topup requests (no admin token)", False, "Admin not logged in")
+            return False
+        
+        # Test get all topup requests
+        response = self.make_request('GET', 'admin/topup-requests', token=self.admin_token)
+        if response and response.status_code == 200:
+            requests_list = response.json()
+            if isinstance(requests_list, list):
+                self.log_test("Get all topup requests", True)
+                
+                # If there are pending requests, test approve/reject
+                pending_requests = [r for r in requests_list if r.get('status') == 'pending']
+                if pending_requests and hasattr(self, 'test_request_id'):
+                    request_id = self.test_request_id
+                    
+                    # Test approve request
+                    approve_response = self.make_request('PUT', f'admin/topup-requests/{request_id}/approve', token=self.admin_token)
+                    if approve_response and approve_response.status_code == 200:
+                        self.log_test("Approve topup request", True)
+                    else:
+                        self.log_test("Approve topup request", False, f"Status: {approve_response.status_code if approve_response else 'No response'}")
+                
+            else:
+                self.log_test("Get all topup requests", False, "Invalid requests format")
+        else:
+            self.log_test("Get all topup requests", False, f"Status: {response.status_code if response else 'No response'}")
+
+    def test_admin_user_management(self):
+        """Test admin user management features"""
+        print("\n👥 Testing Admin User Management...")
+        
+        if not self.admin_token or not self.test_user_id:
+            self.log_test("Admin user management (no tokens)", False, "Admin or test user not available")
+            return False
+        
+        # Test update user balance
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/balance', {"balance": 5000}, token=self.admin_token)
+        if response and response.status_code == 200:
+            self.log_test("Update user balance", True)
+        else:
+            self.log_test("Update user balance", False, f"Status: {response.status_code if response else 'No response'}")
+        
+        # Test update user XP
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/xp', {"xp": 1000}, token=self.admin_token)
+        if response and response.status_code == 200:
+            self.log_test("Update user XP", True)
+        else:
+            self.log_test("Update user XP", False, f"Status: {response.status_code if response else 'No response'}")
+        
+        # Test toggle admin status (make user admin then remove)
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin', {"is_admin": True}, token=self.admin_token)
+        if response and response.status_code == 200:
+            self.log_test("Toggle admin status (grant)", True)
+            
+            # Remove admin status
+            response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin', {"is_admin": False}, token=self.admin_token)
+            if response and response.status_code == 200:
+                self.log_test("Toggle admin status (remove)", True)
+            else:
+                self.log_test("Toggle admin status (remove)", False, f"Status: {response.status_code if response else 'No response'}")
+        else:
+            self.log_test("Toggle admin status (grant)", False, f"Status: {response.status_code if response else 'No response'}")
+
     def run_all_tests(self):
         """Run all tests"""
         print("🚀 Starting TSMarket API Tests...")
