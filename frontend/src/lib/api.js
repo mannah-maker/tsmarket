@@ -56,6 +56,9 @@ export const ordersAPI = {
 export const topupAPI = {
   redeem: (code) => api.post('/topup/redeem', null, { params: { code } }),
   getHistory: () => api.get('/topup/history'),
+  getSettings: () => api.get('/topup/settings'),
+  createRequest: (data) => api.post('/topup/request', data),
+  getRequests: () => api.get('/topup/requests'),
 };
 
 // Rewards API
