@@ -44,7 +44,7 @@ export const Catalog = () => {
       try {
         const params = {};
         if (search) params.search = search;
-        if (category) params.category = category;
+        if (category && category !== 'all') params.category = category;
         if (priceRange[0] > 0) params.min_price = priceRange[0];
         if (priceRange[1] < 10000) params.max_price = priceRange[1];
         if (minXP > 0) params.min_xp = minXP;
