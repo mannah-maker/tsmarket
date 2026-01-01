@@ -863,6 +863,118 @@ async def delete_topup_code(code_id: str, user: User = Depends(require_admin)):
         raise HTTPException(status_code=404, detail="Code not found")
     return {"message": "Code deleted"}
 
+# Admin settings for card payments
+@api_router.get("/admin/settings")
+async def get_admin_settings(user: User = Depends(require_admin)):
+    settings = await db.admin_settings.find_one({"settings_id": "admin_settings"}, {"_id": 0})
+    if not settings:
+        return {"settings_id": "admin_settings", "card_number": "", "card_holder": "", "additional_info": ""}
+    return settings
+
+@api_router.put("/admin/settings")
+async def update_admin_settings(card_number: str, card_holder: str = "", additional_info: str = "", user: User = Depends(require_admin)):
+    await db.admin_settings.update_one(
+        {"settings_id": "admin_settings"},
+        {"$set": {
+            "settings_id": "admin_settings",
+            "card_number": card_number,
+            "card_holder": card_holder,
+            "additional_info": additional_info
+        }},
+        upsert=True
+    )
+    return {"message": "Settings updated"}
+
+# Top-up requests management
+@api_router.get("/admin/topup-requests")
+async def get_all_topup_requests(user: User = Depends(require_admin)):
+    requests = await db.topup_requests.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return requests
+
+@api_router.put("/admin/topup-requests/{request_id}/approve")
+async def approve_topup_request(request_id: str, user: User = Depends(require_admin)):
+    req = await db.topup_requests.find_one({"request_id": request_id}, {"_id": 0})
+    if not req:
+        raise HTTPException(status_code=404, detail="Request not found")
+    
+    if req["status"] != "pending":
+        raise HTTPException(status_code=400, detail="Request already processed")
+    
+    # Update request status
+    await db.topup_requests.update_one(
+        {"request_id": request_id},
+        {"$set": {
+            "status": "approved",
+            "processed_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    # Add balance to user
+    target_user = await db.users.find_one({"user_id": req["user_id"]}, {"_id": 0})
+    if target_user:
+        new_balance = target_user["balance"] + req["amount"]
+        await db.users.update_one(
+            {"user_id": req["user_id"]},
+            {"$set": {"balance": new_balance}}
+        )
+    
+    return {"message": "Request approved", "amount": req["amount"]}
+
+@api_router.put("/admin/topup-requests/{request_id}/reject")
+async def reject_topup_request(request_id: str, note: str = "", user: User = Depends(require_admin)):
+    req = await db.topup_requests.find_one({"request_id": request_id}, {"_id": 0})
+    if not req:
+        raise HTTPException(status_code=404, detail="Request not found")
+    
+    if req["status"] != "pending":
+        raise HTTPException(status_code=400, detail="Request already processed")
+    
+    await db.topup_requests.update_one(
+        {"request_id": request_id},
+        {"$set": {
+            "status": "rejected",
+            "admin_note": note,
+            "processed_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    return {"message": "Request rejected"}
+
+# Delete user
+@api_router.delete("/admin/users/{user_id}")
+async def delete_user(user_id: str, user: User = Depends(require_admin)):
+    if user_id == user.user_id:
+        raise HTTPException(status_code=400, detail="Cannot delete yourself")
+    result = await db.users.delete_one({"user_id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    # Also delete user sessions
+    await db.user_sessions.delete_many({"user_id": user_id})
+    return {"message": "User deleted"}
+
+# Update user balance (admin)
+@api_router.put("/admin/users/{user_id}/balance")
+async def update_user_balance(user_id: str, balance: float, user: User = Depends(require_admin)):
+    result = await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"balance": balance}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "Balance updated"}
+
+# Update user XP/Level (admin)
+@api_router.put("/admin/users/{user_id}/xp")
+async def update_user_xp(user_id: str, xp: int, user: User = Depends(require_admin)):
+    new_level = calculate_level(xp)
+    result = await db.users.update_one(
+        {"user_id": user_id},
+        {"$set": {"xp": xp, "level": new_level}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "XP updated", "new_level": new_level}
+
 @api_router.post("/admin/rewards", response_model=Reward)
 async def create_reward(data: RewardCreate, user: User = Depends(require_admin)):
     reward = Reward(**data.model_dump())
