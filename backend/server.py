@@ -677,6 +677,44 @@ async def redeem_topup_code(code: str, user: User = Depends(require_user)):
     
     return {"message": "Balance topped up", "amount": topup["amount"], "new_balance": new_balance}
 
+# New card-based top-up system
+@api_router.get("/topup/settings")
+async def get_topup_settings():
+    """Get card payment settings (public endpoint)"""
+    settings = await db.admin_settings.find_one({"settings_id": "admin_settings"}, {"_id": 0})
+    if not settings:
+        return {"card_number": "", "card_holder": "", "additional_info": ""}
+    return {
+        "card_number": settings.get("card_number", ""),
+        "card_holder": settings.get("card_holder", ""),
+        "additional_info": settings.get("additional_info", "")
+    }
+
+@api_router.post("/topup/request")
+async def create_topup_request(data: TopUpRequestCreate, user: User = Depends(require_user)):
+    """Create a new top-up request with receipt"""
+    request_data = {
+        "request_id": f"req_{uuid.uuid4().hex[:12]}",
+        "user_id": user.user_id,
+        "user_name": user.name,
+        "user_email": user.email,
+        "amount": data.amount,
+        "receipt_url": data.receipt_url,
+        "status": "pending",
+        "admin_note": None,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "processed_at": None
+    }
+    await db.topup_requests.insert_one(request_data)
+    request_data.pop("_id", None)
+    return request_data
+
+@api_router.get("/topup/requests")
+async def get_user_topup_requests(user: User = Depends(require_user)):
+    """Get user's top-up requests"""
+    requests = await db.topup_requests.find({"user_id": user.user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return requests
+
 @api_router.get("/topup/history")
 async def get_topup_history(user: User = Depends(require_user)):
     history = await db.topup_history.find({"user_id": user.user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
