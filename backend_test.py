@@ -169,7 +169,7 @@ class TSMarketAPITester:
         test_codes = ["WELCOME100", "DRAGON500", "GAMING1000"]
         
         for code in test_codes:
-            response = self.make_request('POST', f'topup/redeem?code={code}', token=self.user_token)
+            response = self.make_request('POST', 'topup/redeem', params={'code': code}, token=self.user_token)
             if response and response.status_code == 200:
                 self.log_test(f"Redeem code {code}", True)
             else:
