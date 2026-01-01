@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button';
 import { productsAPI, categoriesAPI, seedAPI } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ShoppingCart, Sparkles, Trophy, Gift, ArrowRight, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -13,6 +14,7 @@ const HERO_IMAGE = "https://images.unsplash.com/photo-1636036769389-343bb250f013
 export const Home = () => {
   const { isAuthenticated } = useAuth();
   const { addItem } = useCart();
+  const { t } = useLanguage();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,11 +42,11 @@ export const Home = () => {
 
   const handleAddToCart = (product) => {
     if (!isAuthenticated) {
-      toast.error('Please login to add items to cart');
+      toast.error(t('cart.empty'));
       return;
     }
     addItem(product);
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product.name} ${t('catalog.addToCart')}!`);
   };
 
   const features = [
