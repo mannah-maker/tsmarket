@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -54,20 +55,22 @@ const AppRouter = () => {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <AppRouter />
-          <Toaster 
-            position="top-right" 
-            richColors 
-            toastOptions={{
-              style: {
-                fontFamily: 'Outfit, sans-serif',
-              },
-            }}
-          />
-        </CartProvider>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <CartProvider>
+            <AppRouter />
+            <Toaster 
+              position="top-right" 
+              richColors 
+              toastOptions={{
+                style: {
+                  fontFamily: 'Outfit, sans-serif',
+                },
+              }}
+            />
+          </CartProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }
