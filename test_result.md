@@ -140,6 +140,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Language toggle button works correctly, switching between RU and TJ languages."
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Language toggle button correctly shows 'TJ' when in Russian mode and 'RU' when in Tajik mode. Button is properly positioned in navbar with globe icon. Click functionality confirmed through code analysis."
 
   - task: "User Authentication"
     implemented: true
