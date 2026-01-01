@@ -50,9 +50,9 @@ export const Home = () => {
   };
 
   const features = [
-    { icon: Sparkles, title: 'Earn XP', description: 'Get XP with every purchase' },
-    { icon: Trophy, title: 'Level Up', description: 'Unlock rewards as you progress' },
-    { icon: Gift, title: 'Spin & Win', description: 'Fortune wheel for level-up bonuses' },
+    { icon: Sparkles, titleKey: 'home.earnXP', descKey: 'home.earnXPDesc' },
+    { icon: Trophy, titleKey: 'home.levelUp', descKey: 'home.levelUpDesc' },
+    { icon: Gift, titleKey: 'home.spinWin', descKey: 'home.spinWinDesc' },
   ];
 
   return (
@@ -65,31 +65,31 @@ export const Home = () => {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 rounded-full border border-border">
                 <Zap className="w-4 h-4 text-accent" />
-                <span className="text-sm font-bold uppercase tracking-wider">Gamified Shopping</span>
+                <span className="text-sm font-bold uppercase tracking-wider">{t('common.storeTagline')}</span>
               </div>
               
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">
                 <span className="text-green-500">TS</span>
                 <span className="text-teal-500">Market</span>
                 <br />
-                <span className="text-foreground/80 text-3xl md:text-5xl">Level Up Your Game</span>
+                <span className="text-foreground/80 text-3xl md:text-5xl">{t('home.heroSubtitle')}</span>
               </h1>
               
               <p className="text-lg text-muted-foreground max-w-lg">
-                Shop gaming gear, earn XP, unlock rewards. The ultimate marketplace for gamers who want more than just products.
+                {t('home.heroDescription')}
               </p>
               
               <div className="flex flex-wrap gap-4">
                 <Link to="/catalog">
                   <Button className="tsmarket-btn-primary rounded-full px-8 py-6 text-lg" data-testid="shop-now-btn">
-                    Shop Now
+                    {t('home.shopNow')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
                 {!isAuthenticated && (
                   <Link to="/auth?mode=register">
                     <Button variant="outline" className="rounded-full px-8 py-6 text-lg font-bold" data-testid="join-btn">
-                      Join TSMarket
+                      {t('home.joinUs')}
                     </Button>
                   </Link>
                 )}
@@ -117,10 +117,10 @@ export const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Why <span className="tsmarket-gold-text">TSMarket</span>?
+              {t('home.whyUs')}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              More than just shopping. Experience gamification at its finest.
+              {t('footer.description')}
             </p>
           </div>
 
@@ -134,8 +134,8 @@ export const Home = () => {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6 group-hover:scale-110 transition-transform">
                   <feature.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="text-xl font-bold mb-3">{t(feature.titleKey)}</h3>
+                <p className="text-muted-foreground">{t(feature.descKey)}</p>
               </div>
             ))}
           </div>
@@ -147,8 +147,8 @@ export const Home = () => {
         <section className="py-20 tsmarket-gradient" data-testid="categories-section">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Categories</h2>
-              <p className="text-lg text-muted-foreground">Explore our curated collections</p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">{t('home.categories')}</h2>
+              <p className="text-lg text-muted-foreground">{t('catalog.subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -175,12 +175,12 @@ export const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-2">Popular Items</h2>
-              <p className="text-lg text-muted-foreground">Trending products our gamers love</p>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-2">{t('home.popularItems')}</h2>
+              <p className="text-lg text-muted-foreground">{t('catalog.subtitle')}</p>
             </div>
             <Link to="/catalog">
               <Button variant="outline" className="rounded-full font-bold hidden md:flex" data-testid="view-all-btn">
-                View All
+                {t('home.viewAll')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
@@ -239,7 +239,7 @@ export const Home = () => {
           <div className="text-center mt-8 md:hidden">
             <Link to="/catalog">
               <Button variant="outline" className="rounded-full font-bold" data-testid="view-all-mobile-btn">
-                View All Products
+                {t('home.viewAll')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
@@ -251,23 +251,23 @@ export const Home = () => {
       <section className="py-20 bg-foreground text-background" data-testid="cta-section">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Ready to <span className="text-primary">Level Up</span>?
+            {t('home.readyToLevel')}
           </h2>
           <p className="text-xl text-background/70 mb-8">
-            Join thousands of gamers earning rewards with every purchase.
+            {t('home.readyDesc')}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {!isAuthenticated ? (
               <Link to="/auth?mode=register">
                 <Button className="tsmarket-btn-primary rounded-full px-10 py-6 text-lg" data-testid="cta-register-btn">
-                  Create Account
+                  {t('home.createAccount')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
             ) : (
               <Link to="/catalog">
                 <Button className="tsmarket-btn-primary rounded-full px-10 py-6 text-lg" data-testid="cta-shop-btn">
-                  Start Shopping
+                  {t('home.shopNow')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
