@@ -980,6 +980,39 @@ async def update_user_xp(user_id: str, xp: int, user: User = Depends(require_adm
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": "XP updated", "new_level": new_level}
 
+# Admin profile update (email/password)
+class AdminProfileUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    name: Optional[str] = None
+
+@api_router.put("/admin/profile")
+async def update_admin_profile(data: AdminProfileUpdate, user: User = Depends(require_admin)):
+    updates = {}
+    
+    if data.email and data.email != user.email:
+        # Check if email is already taken
+        existing = await db.users.find_one({"email": data.email, "user_id": {"$ne": user.user_id}}, {"_id": 0})
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already in use")
+        updates["email"] = data.email
+    
+    if data.password:
+        if len(data.password) < 6:
+            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        updates["password_hash"] = hash_password(data.password)
+    
+    if data.name:
+        updates["name"] = data.name
+    
+    if updates:
+        await db.users.update_one(
+            {"user_id": user.user_id},
+            {"$set": updates}
+        )
+    
+    return {"message": "Profile updated"}
+
 @api_router.post("/admin/rewards", response_model=Reward)
 async def create_reward(data: RewardCreate, user: User = Depends(require_admin)):
     reward = Reward(**data.model_dump())
