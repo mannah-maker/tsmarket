@@ -190,11 +190,11 @@ export const Admin = () => {
   // Settings handlers
   const handleSaveSettings = async () => {
     try {
-      await adminAPI.updateSettings(
-        adminSettings.card_number,
-        adminSettings.card_holder,
-        adminSettings.additional_info
-      );
+      await adminAPI.updateSettings({
+        card_number: adminSettings.card_number,
+        card_holder: adminSettings.card_holder,
+        additional_info: adminSettings.additional_info
+      });
       toast.success('Settings saved');
     } catch (error) {
       toast.error('Failed to save settings');
