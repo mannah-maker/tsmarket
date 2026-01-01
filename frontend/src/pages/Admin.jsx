@@ -42,6 +42,11 @@ export const Admin = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editBalance, setEditBalance] = useState('');
   const [editXP, setEditXP] = useState('');
+  
+  // Admin profile edit
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminName, setAdminName] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) {
@@ -50,6 +55,13 @@ export const Admin = () => {
     }
     fetchAllData();
   }, [isAuthenticated, isAdmin, navigate]);
+
+  useEffect(() => {
+    if (user) {
+      setAdminEmail(user.email || '');
+      setAdminName(user.name || '');
+    }
+  }, [user]);
 
   const fetchAllData = async () => {
     setLoading(true);
