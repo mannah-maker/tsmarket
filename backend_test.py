@@ -481,8 +481,14 @@ class TSMarketAPITester:
         self.test_cart_and_checkout()
         self.test_rewards_system()
         
+        # Test NEW card-based topup system
+        self.test_new_card_topup_system()
+        
         # Test admin functionality
         self.test_admin_endpoints()
+        self.test_admin_card_settings()
+        self.test_admin_topup_requests_management()
+        self.test_admin_user_management()
         
         return True
 
