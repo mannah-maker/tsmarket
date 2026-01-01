@@ -325,8 +325,8 @@ async def register(data: UserCreate, response: Response):
         max_age=7*24*60*60
     )
     
-    del user_data["password_hash"]
-    del user_data["_id"] if "_id" in user_data else None
+    user_data.pop("password_hash", None)
+    user_data.pop("_id", None)
     return {"user": user_data, "token": session_token}
 
 @api_router.post("/auth/login")
