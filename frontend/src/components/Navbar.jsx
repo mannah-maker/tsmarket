@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Button } from './ui/button';
-import { ShoppingCart, User, Menu, X, LogOut, Settings, Gift, Wallet } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, LogOut, Settings, Gift, Wallet, Globe } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ const LOGO_URL = "https://customer-assets.emergentagent.com/job_tsmarket-shop/ar
 export const Navbar = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { itemCount } = useCart();
+  const { t, lang, toggleLanguage } = useLanguage();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -26,8 +28,8 @@ export const Navbar = () => {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/catalog', label: 'Catalog' },
+    { to: '/', label: t('nav.home') },
+    { to: '/catalog', label: t('nav.catalog') },
   ];
 
   return (
@@ -47,19 +49,31 @@ export const Navbar = () => {
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link key={link.to} to={link.to} className="nav-link" data-testid={`nav-${link.label.toLowerCase()}`}>
+                <Link key={link.to} to={link.to} className="nav-link" data-testid={`nav-${link.to.replace('/', '') || 'home'}`}>
                   {link.label}
                 </Link>
               ))}
               {isAuthenticated && (
                 <Link to="/rewards" className="nav-link" data-testid="nav-rewards">
-                  Rewards
+                  {t('nav.rewards')}
                 </Link>
               )}
             </div>
 
             {/* Right Section */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              {/* Language Switcher */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleLanguage}
+                className="rounded-full font-bold"
+                data-testid="lang-toggle"
+              >
+                <Globe className="w-4 h-4 mr-1" />
+                {lang === 'ru' ? 'TJ' : 'RU'}
+              </Button>
+
               {isAuthenticated && (
                 <>
                   {/* Balance Display */}
@@ -103,7 +117,7 @@ export const Navbar = () => {
                           {user?.level || 1}
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs text-muted-foreground">Level {user?.level || 1}</p>
+                          <p className="text-xs text-muted-foreground">{t('common.level')} {user?.level || 1}</p>
                           <p className="text-xs font-bold">{user?.xp || 0} XP</p>
                         </div>
                       </div>
@@ -112,19 +126,19 @@ export const Navbar = () => {
                     <DropdownMenuItem asChild>
                       <Link to="/profile" className="flex items-center gap-2 cursor-pointer" data-testid="profile-link">
                         <User className="w-4 h-4" />
-                        Profile
+                        {t('nav.profile')}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/topup" className="flex items-center gap-2 cursor-pointer" data-testid="topup-link">
                         <Wallet className="w-4 h-4" />
-                        Top Up
+                        {t('nav.topup')}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/rewards" className="flex items-center gap-2 cursor-pointer" data-testid="rewards-link">
                         <Gift className="w-4 h-4" />
-                        Rewards
+                        {t('nav.rewards')}
                       </Link>
                     </DropdownMenuItem>
                     {isAdmin && (
@@ -133,7 +147,7 @@ export const Navbar = () => {
                         <DropdownMenuItem asChild>
                           <Link to="/admin" className="flex items-center gap-2 cursor-pointer text-destructive" data-testid="admin-link">
                             <Settings className="w-4 h-4" />
-                            Admin Panel
+                            {t('nav.admin')}
                           </Link>
                         </DropdownMenuItem>
                       </>
@@ -141,7 +155,7 @@ export const Navbar = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer text-destructive" data-testid="logout-btn">
                       <LogOut className="w-4 h-4" />
-                      Logout
+                      {t('nav.logout')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -149,12 +163,12 @@ export const Navbar = () => {
                 <div className="flex items-center gap-2">
                   <Link to="/auth">
                     <Button variant="outline" size="sm" className="rounded-full font-bold" data-testid="login-btn">
-                      Login
+                      {t('nav.login')}
                     </Button>
                   </Link>
                   <Link to="/auth?mode=register" className="hidden sm:block">
                     <Button size="sm" className="tsmarket-btn-primary rounded-full px-6" data-testid="register-btn">
-                      Sign Up
+                      {t('nav.register')}
                     </Button>
                   </Link>
                 </div>
@@ -195,13 +209,13 @@ export const Navbar = () => {
           {isAuthenticated && (
             <>
               <Link to="/rewards" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
-                Rewards
+                {t('nav.rewards')}
               </Link>
               <Link to="/profile" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
-                Profile
+                {t('nav.profile')}
               </Link>
               <Link to="/topup" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
-                Top Up
+                {t('nav.topup')}
               </Link>
             </>
           )}
