@@ -41,8 +41,7 @@ export const Navbar = () => {
             <Link to="/" className="flex items-center gap-3" data-testid="logo-link">
               <img src={LOGO_URL} alt="TSMarket" className="h-10 w-10 rounded-full object-cover" />
               <span className="font-bold text-xl tracking-tight hidden sm:block">
-                <span className="text-green-500">TS</span>
-                <span className="text-teal-500">Market</span>
+                {t('common.storeName')}
               </span>
             </Link>
 
