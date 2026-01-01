@@ -22,7 +22,7 @@ export const Catalog = () => {
   
   // Filters
   const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [category, setCategory] = useState(searchParams.get('category') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || 'all');
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [minXP, setMinXP] = useState(0);
 
