@@ -584,6 +584,9 @@ async def create_order(items: List[CartItem], user: User = Depends(require_user)
     order_dict["items"] = [item.model_dump() for item in order_items]
     await db.orders.insert_one(order_dict)
     
+    # Remove MongoDB _id from response
+    order_dict.pop("_id", None)
+    
     # Update user balance and XP
     new_xp = current_user["xp"] + total_xp
     old_level = current_user["level"]
