@@ -394,6 +394,8 @@ export const translations = {
       close: 'Закрыть',
       yes: 'Да',
       no: 'Нет',
+      storeName: 'ТС Маркет',
+      storeTagline: 'Игровой магазин',
     },
     // Footer
     footer: {
