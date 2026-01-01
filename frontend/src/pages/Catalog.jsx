@@ -73,13 +73,13 @@ export const Catalog = () => {
 
   const clearFilters = () => {
     setSearch('');
-    setCategory('');
+    setCategory('all');
     setPriceRange([0, 10000]);
     setMinXP(0);
     setSearchParams({});
   };
 
-  const hasActiveFilters = search || category || priceRange[0] > 0 || priceRange[1] < 10000 || minXP > 0;
+  const hasActiveFilters = search || (category && category !== 'all') || priceRange[0] > 0 || priceRange[1] < 10000 || minXP > 0;
 
   return (
     <div className="min-h-screen tsmarket-gradient py-8" data-testid="catalog-page">
