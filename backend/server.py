@@ -877,14 +877,14 @@ async def get_admin_settings(user: User = Depends(require_admin)):
     return settings
 
 @api_router.put("/admin/settings")
-async def update_admin_settings(card_number: str, card_holder: str = "", additional_info: str = "", user: User = Depends(require_admin)):
+async def update_admin_settings(data: AdminSettingsUpdate, user: User = Depends(require_admin)):
     await db.admin_settings.update_one(
         {"settings_id": "admin_settings"},
         {"$set": {
             "settings_id": "admin_settings",
-            "card_number": card_number,
-            "card_holder": card_holder,
-            "additional_info": additional_info
+            "card_number": data.card_number,
+            "card_holder": data.card_holder,
+            "additional_info": data.additional_info
         }},
         upsert=True
     )
