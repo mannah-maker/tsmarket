@@ -178,6 +178,11 @@ class AdminSettings(BaseModel):
     card_holder: str = ""
     additional_info: str = ""
 
+class AdminSettingsUpdate(BaseModel):
+    card_number: str
+    card_holder: str = ""
+    additional_info: str = ""
+
 class Reward(BaseModel):
     model_config = ConfigDict(extra="ignore")
     reward_id: str = Field(default_factory=lambda: f"rew_{uuid.uuid4().hex[:12]}")
