@@ -192,6 +192,8 @@ export const translations = {
       close: 'Пӯшед',
       yes: 'Ҳа',
       no: 'Не',
+      storeName: 'ТС Маркет',
+      storeTagline: 'Мағозаи бозиҳо',
     },
     // Footer
     footer: {
