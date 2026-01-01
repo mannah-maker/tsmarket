@@ -116,6 +116,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Store name now translates correctly when switching languages. Uses t('common.storeName') from translations.js"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Store name 'ТС Маркет' displays correctly in both navbar and footer. Translation implementation confirmed in both Russian and Tajik using t('common.storeName'). Visual verification shows proper rendering."
 
   - task: "Multilingual Support - Home page full translation"
     implemented: true
