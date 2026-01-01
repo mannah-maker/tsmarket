@@ -430,26 +430,26 @@ class TSMarketAPITester:
             return False
         
         # Test update user balance
-        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/balance', {"balance": 5000}, token=self.admin_token)
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/balance?balance=5000', token=self.admin_token)
         if response and response.status_code == 200:
             self.log_test("Update user balance", True)
         else:
             self.log_test("Update user balance", False, f"Status: {response.status_code if response else 'No response'}")
         
         # Test update user XP
-        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/xp', {"xp": 1000}, token=self.admin_token)
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/xp?xp=1000', token=self.admin_token)
         if response and response.status_code == 200:
             self.log_test("Update user XP", True)
         else:
             self.log_test("Update user XP", False, f"Status: {response.status_code if response else 'No response'}")
         
         # Test toggle admin status (make user admin then remove)
-        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin', {"is_admin": True}, token=self.admin_token)
+        response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin?is_admin=true', token=self.admin_token)
         if response and response.status_code == 200:
             self.log_test("Toggle admin status (grant)", True)
             
             # Remove admin status
-            response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin', {"is_admin": False}, token=self.admin_token)
+            response = self.make_request('PUT', f'admin/users/{self.test_user_id}/admin?is_admin=false', token=self.admin_token)
             if response and response.status_code == 200:
                 self.log_test("Toggle admin status (remove)", True)
             else:
