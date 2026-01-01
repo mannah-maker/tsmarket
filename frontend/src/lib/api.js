@@ -85,8 +85,7 @@ export const adminAPI = {
   createTopupCode: (data) => api.post('/admin/topup-codes', data),
   deleteTopupCode: (id) => api.delete(`/admin/topup-codes/${id}`),
   getSettings: () => api.get('/admin/settings'),
-  updateSettings: (cardNumber, cardHolder, additionalInfo) => 
-    api.put('/admin/settings', null, { params: { card_number: cardNumber, card_holder: cardHolder, additional_info: additionalInfo } }),
+  updateSettings: (data) => api.put('/admin/settings', data),
   getTopupRequests: () => api.get('/admin/topup-requests'),
   approveTopupRequest: (id) => api.put(`/admin/topup-requests/${id}/approve`),
   rejectTopupRequest: (id, note) => api.put(`/admin/topup-requests/${id}/reject`, null, { params: { note } }),
