@@ -213,6 +213,31 @@ export const Admin = () => {
     }
   };
 
+  // Admin profile handlers
+  const handleSaveAdminProfile = async () => {
+    try {
+      const updates = {};
+      if (adminEmail && adminEmail !== user?.email) updates.email = adminEmail;
+      if (adminPassword) updates.password = adminPassword;
+      if (adminName && adminName !== user?.name) updates.name = adminName;
+      
+      if (Object.keys(updates).length === 0) {
+        toast.info('Нет изменений');
+        return;
+      }
+      
+      await adminAPI.updateProfile(updates);
+      toast.success('Профиль обновлён! Войдите заново.');
+      setAdminPassword('');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to update profile');
+    }
+  };
+    } catch (error) {
+      toast.error('Failed to save settings');
+    }
+  };
+
   // User management handlers
   const handleToggleAdmin = async (userId, currentStatus) => {
     try {
