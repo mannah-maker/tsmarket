@@ -154,7 +154,7 @@ export const Catalog = () => {
 
               {/* Price Range */}
               <div className="mb-6">
-                <label className="text-sm font-bold mb-3 block">Price Range</label>
+                <label className="text-sm font-bold mb-3 block">{t('catalog.priceRange')}</label>
                 <Slider
                   value={priceRange}
                   onValueChange={setPriceRange}
@@ -172,7 +172,7 @@ export const Catalog = () => {
 
               {/* Min XP */}
               <div className="mb-6">
-                <label className="text-sm font-bold mb-3 block">Min XP Reward</label>
+                <label className="text-sm font-bold mb-3 block">{t('catalog.minXP')}</label>
                 <Slider
                   value={[minXP]}
                   onValueChange={([val]) => setMinXP(val)}
@@ -190,7 +190,7 @@ export const Catalog = () => {
 
               {/* Categories List */}
               <div>
-                <label className="text-sm font-bold mb-3 block">Categories</label>
+                <label className="text-sm font-bold mb-3 block">{t('home.categories')}</label>
                 <div className="space-y-2">
                   <button
                     onClick={() => setCategory('all')}
