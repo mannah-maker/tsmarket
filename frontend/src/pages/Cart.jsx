@@ -172,33 +172,48 @@ export const Cart = () => {
                 data-testid="clear-cart-btn"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
-                Clear Cart
+                {t('cart.clearCart')}
               </Button>
             </div>
 
             {/* Order Summary */}
             <div>
               <div className="tsmarket-card p-6 sticky top-24" data-testid="order-summary">
-                <h3 className="font-bold text-lg mb-4">Order Summary</h3>
+                <h3 className="font-bold text-lg mb-4">{t('cart.orderSummary')}</h3>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Items ({items.length})</span>
+                    <span className="text-muted-foreground">{t('cart.items')} ({items.length})</span>
                     <span className="font-bold">{total}</span>
                   </div>
                   <div className="flex justify-between text-primary">
                     <span className="flex items-center gap-1">
                       <Sparkles className="w-4 h-4" />
-                      XP to earn
+                      {t('cart.xpToEarn')}
                     </span>
                     <span className="font-bold">+{totalXP}</span>
                   </div>
                   <div className="border-t border-border pt-3">
                     <div className="flex justify-between text-xl">
-                      <span className="font-bold">Total</span>
+                      <span className="font-bold">{t('cart.total')}</span>
                       <span className="font-black text-primary">{total}</span>
                     </div>
                   </div>
+                </div>
+
+                {/* Delivery Address */}
+                <div className="mb-4">
+                  <label className="text-sm font-bold mb-2 flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    {t('cart.deliveryAddress')} *
+                  </label>
+                  <Textarea
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    placeholder={t('cart.addressPlaceholder')}
+                    className="tsmarket-input min-h-[80px]"
+                    data-testid="delivery-address"
+                  />
                 </div>
 
                 {/* Balance Info */}
@@ -207,7 +222,7 @@ export const Cart = () => {
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-2">
                         <Wallet className="w-4 h-4" />
-                        Your Balance
+                        {t('cart.yourBalance')}
                       </span>
                       <span className={`font-bold ${insufficientBalance ? 'text-destructive' : 'text-primary'}`}>
                         {user?.balance?.toFixed(0) || 0}
@@ -215,7 +230,7 @@ export const Cart = () => {
                     </div>
                     {insufficientBalance && (
                       <p className="text-xs text-destructive mt-2">
-                        You need {(total - (user?.balance || 0)).toFixed(0)} more coins
+                        {t('cart.needMore')} {(total - (user?.balance || 0)).toFixed(0)} {t('cart.moreCoins')}
                       </p>
                     )}
                   </div>
