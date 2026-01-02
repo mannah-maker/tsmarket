@@ -873,9 +873,15 @@ export const Admin = () => {
                       <p className="text-sm">{new Date(o.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm">{o.items?.length || 0} items</p>
+                      <p className="text-sm">{o.items?.length || 0} {t('cart.items')}</p>
                       <p className="font-bold text-primary">{o.total} coins • +{o.total_xp} XP</p>
                     </div>
+                    {o.delivery_address && (
+                      <div className="mt-2 p-2 bg-slate-600 rounded text-sm">
+                        <span className="text-slate-400">📍 {t('cart.deliveryAddress')}:</span>
+                        <p className="text-white">{o.delivery_address}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
