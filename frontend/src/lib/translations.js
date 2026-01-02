@@ -330,6 +330,11 @@ export const translations = {
       orderHistory: 'История заказов',
       noOrders: 'Заказов пока нет',
       achievements: 'Достижения',
+      statusCompleted: 'Выполнен',
+      achRisingStar: 'Восходящая звезда',
+      achDragon: 'Убийца драконов',
+      achShopper: 'Покупатель',
+      achXPHunter: 'Охотник за XP',
     },
     // Top-up
     topup: {
