@@ -246,39 +246,78 @@ backend:
 
   - task: "Orders API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "/api/orders/create and /api/orders/history endpoints"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Orders API with delivery address validation working correctly. Tested POST /api/orders endpoint: 1) Order without delivery_address field fails with 422 validation error (Pydantic field required), 2) Order with empty delivery_address fails with 400 'Delivery address is required', 3) Order with short address (less than 5 chars) fails with 400 'Delivery address is required', 4) Order with valid address 'г. Душанбе, ул. Ленина 15, кв 42' succeeds and saves delivery address correctly. All validation scenarios working as expected."
 
   - task: "Top-Up API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "/api/topup/request and /api/topup/history endpoints"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Top-up API working correctly. Card-based top-up system functional: GET /api/topup/settings returns card payment info, POST /api/topup/request creates requests with receipt upload, GET /api/topup/requests shows user requests, admin approval/rejection endpoints working. All core top-up functionality operational."
 
   - task: "Admin API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Admin endpoints for stats, user management, top-up approval"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Admin API working correctly. All admin endpoints functional: GET /api/admin/stats returns user/order counts and revenue, GET /api/admin/users lists all users, user management (balance/XP updates, admin toggle, user deletion) working, top-up request approval/rejection working, admin settings management working. Complete admin functionality operational."
+
+  - task: "Authentication API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "JWT-based auth with /api/auth/register, /api/auth/login, /api/auth/me endpoints"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Authentication API working correctly. User registration, admin login with admin@tsmarket.com/admin123, JWT token generation, user profile retrieval all functional. Session management and authentication middleware working properly."
+
+  - task: "Products API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "/api/products and /api/categories endpoints"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Products API working correctly. GET /api/products returns product list, GET /api/products/{id} returns single product, product search with query parameters working, GET /api/categories returns categories. All product catalog functionality operational."
 
 metadata:
   created_by: "main_agent"
