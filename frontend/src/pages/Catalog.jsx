@@ -199,7 +199,7 @@ export const Catalog = () => {
                     }`}
                     data-testid="filter-all"
                   >
-                    All Categories
+                    {t('catalog.allCategories')}
                   </button>
                   {categories.map((cat) => (
                     <button
@@ -229,16 +229,16 @@ export const Catalog = () => {
             ) : products.length === 0 ? (
               <div className="empty-state">
                 <Sparkles className="empty-state-icon" />
-                <h3 className="text-xl font-bold mb-2">No products found</h3>
-                <p className="text-muted-foreground mb-4">Try adjusting your filters</p>
+                <h3 className="text-xl font-bold mb-2">{t('catalog.noProducts')}</h3>
+                <p className="text-muted-foreground mb-4">{t('catalog.adjustFilters')}</p>
                 <Button onClick={clearFilters} variant="outline" className="rounded-full">
-                  Clear Filters
+                  {t('catalog.clear')}
                 </Button>
               </div>
             ) : (
               <>
                 <p className="text-sm text-muted-foreground mb-4" data-testid="results-count">
-                  {products.length} products found
+                  {products.length} {t('catalog.productsFound')}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {products.map((product) => (
