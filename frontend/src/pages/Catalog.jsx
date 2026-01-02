@@ -7,12 +7,14 @@ import { Slider } from '../components/ui/slider';
 import { productsAPI, categoriesAPI } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ShoppingCart, Search, Filter, X, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const Catalog = () => {
   const { isAuthenticated } = useAuth();
   const { addItem } = useCart();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   
   const [products, setProducts] = useState([]);
@@ -97,7 +99,7 @@ export const Catalog = () => {
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Search products..."
+              placeholder={t('catalog.search')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-12 tsmarket-input"
@@ -107,10 +109,10 @@ export const Catalog = () => {
           
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="w-full md:w-48 tsmarket-input" data-testid="category-select">
-              <SelectValue placeholder="All Categories" />
+              <SelectValue placeholder={t('catalog.allCategories')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="all">{t('catalog.allCategories')}</SelectItem>
               {categories.map((cat) => (
                 <SelectItem key={cat.category_id} value={cat.category_id}>
                   {cat.name}
@@ -126,7 +128,7 @@ export const Catalog = () => {
             data-testid="filter-toggle-btn"
           >
             <Filter className="w-4 h-4 mr-2" />
-            Filters
+            {t('catalog.filters')}
           </Button>
         </div>
 
@@ -135,7 +137,7 @@ export const Catalog = () => {
           <aside className={`w-64 shrink-0 ${showFilters ? 'block' : 'hidden'} md:block`}>
             <div className="tsmarket-card p-6 sticky top-24" data-testid="filters-sidebar">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-lg">Filters</h3>
+                <h3 className="font-bold text-lg">{t('catalog.filters')}</h3>
                 {hasActiveFilters && (
                   <Button
                     variant="ghost"
@@ -145,7 +147,7 @@ export const Catalog = () => {
                     data-testid="clear-filters-btn"
                   >
                     <X className="w-4 h-4 mr-1" />
-                    Clear
+                    {t('catalog.clear')}
                   </Button>
                 )}
               </div>
