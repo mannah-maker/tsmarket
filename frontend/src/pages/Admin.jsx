@@ -47,6 +47,8 @@ export const Admin = () => {
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [adminName, setAdminName] = useState('');
+  const [adminSecretKey, setAdminSecretKey] = useState('');
+  const ADMIN_SECRET = 'Manah';
 
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) {
@@ -215,6 +217,12 @@ export const Admin = () => {
 
   // Admin profile handlers
   const handleSaveAdminProfile = async () => {
+    // Check secret key
+    if (adminSecretKey !== ADMIN_SECRET) {
+      toast.error('Неверное ключевое слово! / Калимаи асосӣ нодуруст!');
+      return;
+    }
+    
     try {
       const updates = {};
       if (adminEmail && adminEmail !== user?.email) updates.email = adminEmail;
@@ -229,8 +237,9 @@ export const Admin = () => {
       await adminAPI.updateProfile(updates);
       toast.success('Профиль обновлён! Войдите заново.');
       setAdminPassword('');
+      setAdminSecretKey('');
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to update profile');
+      toast.error(error.response?.data?.detail || 'Ошибка обновления профиля');
     }
   };
 
@@ -553,6 +562,18 @@ export const Admin = () => {
                     placeholder="••••••••"
                     data-testid="admin-password-input"
                   />
+                </div>
+                <div>
+                  <Label className="text-yellow-400">Ключевое слово / Калимаи асосӣ *</Label>
+                  <Input
+                    type="password"
+                    value={adminSecretKey}
+                    onChange={(e) => setAdminSecretKey(e.target.value)}
+                    className="admin-input border-yellow-500"
+                    placeholder="Введите ключевое слово"
+                    data-testid="admin-secret-input"
+                  />
+                  <p className="text-xs text-yellow-400 mt-1">Обязательно для сохранения изменений</p>
                 </div>
                 <Button onClick={handleSaveAdminProfile} className="w-full bg-blue-600 hover:bg-blue-700" data-testid="save-profile-btn">
                   Сохранить профиль / Нигоҳ доштани профил
