@@ -608,6 +608,10 @@ class TSMarketAPITester:
         self.test_topup_codes()
         self.test_user_profile()
         self.test_cart_and_checkout()
+        
+        # Test delivery address validation (specific test requested)
+        self.test_delivery_address_validation()
+        
         self.test_rewards_system()
         
         # Test NEW card-based topup system
