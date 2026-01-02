@@ -267,6 +267,7 @@ export const translations = {
       noProducts: 'Товары не найдены',
       addToCart: 'В корзину',
       sizes: 'размеров',
+      adjustFilters: 'Измените фильтры',
     },
     // Product
     product: {
