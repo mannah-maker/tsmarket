@@ -571,9 +571,15 @@ async def delete_product(product_id: str, user: User = Depends(require_admin)):
 # ==================== ORDER ENDPOINTS ====================
 
 @api_router.post("/orders")
-async def create_order(items: List[CartItem], user: User = Depends(require_user)):
+async def create_order(data: CreateOrderRequest, user: User = Depends(require_user)):
+    items = data.items
+    delivery_address = data.delivery_address
+    
     if not items:
         raise HTTPException(status_code=400, detail="Cart is empty")
+    
+    if not delivery_address or len(delivery_address.strip()) < 5:
+        raise HTTPException(status_code=400, detail="Delivery address is required")
     
     order_items = []
     total = 0.0
@@ -612,7 +618,8 @@ async def create_order(items: List[CartItem], user: User = Depends(require_user)
         user_id=user.user_id,
         items=order_items,
         total=total,
-        total_xp=total_xp
+        total_xp=total_xp,
+        delivery_address=delivery_address.strip()
     )
     order_dict = order.model_dump()
     order_dict["created_at"] = order_dict["created_at"].isoformat()
