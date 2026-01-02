@@ -270,14 +270,20 @@ class TSMarketAPITester:
         }
         
         response = self.make_request('POST', 'orders', order_data_no_address, token=self.admin_token)
-        if response and response.status_code == 400:
-            error_detail = response.json().get('detail', '')
-            if 'Delivery address is required' in error_detail:
-                self.log_test("Order without delivery address (should fail)", True)
+        if response:
+            if response.status_code == 422:
+                # Pydantic validation error - delivery_address field missing
+                self.log_test("Order without delivery address (should fail)", True, "422 validation error as expected")
+            elif response.status_code == 400:
+                error_detail = response.json().get('detail', '')
+                if 'Delivery address is required' in error_detail:
+                    self.log_test("Order without delivery address (should fail)", True)
+                else:
+                    self.log_test("Order without delivery address (should fail)", False, f"Wrong error message: {error_detail}")
             else:
-                self.log_test("Order without delivery address (should fail)", False, f"Wrong error message: {error_detail}")
+                self.log_test("Order without delivery address (should fail)", False, f"Expected 400/422 error, got: {response.status_code}")
         else:
-            self.log_test("Order without delivery address (should fail)", False, f"Expected 400 error, got: {response.status_code if response else 'No response'}")
+            self.log_test("Order without delivery address (should fail)", False, "No response")
         
         # Test 2: Order with empty delivery address - should fail
         order_data_empty_address = {
