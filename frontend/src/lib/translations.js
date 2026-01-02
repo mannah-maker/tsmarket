@@ -294,13 +294,22 @@ export const translations = {
     auth: {
       login: 'Вход',
       register: 'Регистрация',
-      email: 'Email',
+      email: 'Почта',
       password: 'Пароль',
       confirmPassword: 'Подтвердите пароль',
       name: 'Имя',
+      namePlaceholder: 'Ваше имя',
       orContinueWith: 'или продолжить с',
       continueGoogle: 'Продолжить с Google',
       demoAccount: 'Демо аккаунт',
+      createAccount: 'Создать аккаунт',
+      fillAllFields: 'Заполните все поля',
+      passwordsNoMatch: 'Пароли не совпадают',
+      passwordTooShort: 'Пароль должен быть не менее 6 символов',
+      welcomeBack: 'С возвращением!',
+      accountCreated: 'Аккаунт создан!',
+      loginFailed: 'Ошибка входа',
+      registerFailed: 'Ошибка регистрации',
     },
     // Profile
     profile: {
