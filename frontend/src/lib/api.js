@@ -48,7 +48,7 @@ export const productsAPI = {
 
 // Orders API
 export const ordersAPI = {
-  create: (items) => api.post('/orders', items),
+  create: (items, deliveryAddress) => api.post('/orders', { items, delivery_address: deliveryAddress }),
   getAll: () => api.get('/orders'),
 };
 
