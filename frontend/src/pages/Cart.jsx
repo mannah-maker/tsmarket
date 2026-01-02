@@ -240,14 +240,14 @@ export const Cart = () => {
                   <Link to="/topup">
                     <Button className="w-full tsmarket-btn-secondary rounded-full py-6" data-testid="topup-btn">
                       <Wallet className="w-5 h-5 mr-2" />
-                      Top Up Balance
+                      {t('cart.topUpBalance')}
                     </Button>
                   </Link>
                 ) : (
                   <Button
                     className="w-full tsmarket-btn-primary rounded-full py-6"
                     onClick={handleCheckout}
-                    disabled={loading || items.length === 0}
+                    disabled={loading || items.length === 0 || !deliveryAddress.trim()}
                     data-testid="checkout-btn"
                   >
                     {loading ? (
@@ -255,7 +255,7 @@ export const Cart = () => {
                     ) : (
                       <>
                         <ShoppingCart className="w-5 h-5 mr-2" />
-                        Checkout
+                        {t('cart.checkout')}
                       </>
                     )}
                   </Button>
@@ -263,7 +263,7 @@ export const Cart = () => {
 
                 <Link to="/catalog">
                   <Button variant="ghost" className="w-full mt-4" data-testid="continue-shopping-btn">
-                    Continue Shopping
+                    {t('cart.continueShopping')}
                   </Button>
                 </Link>
               </div>
