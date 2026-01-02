@@ -114,6 +114,11 @@ export const translations = {
       orderHistory: 'Таърихи фармоишҳо',
       noOrders: 'Ҳанӯз фармоиш нест',
       achievements: 'Дастовардҳо',
+      statusCompleted: 'Иҷро шуд',
+      achRisingStar: 'Ситораи нав',
+      achDragon: 'Аждаҳокуш',
+      achShopper: 'Харидор',
+      achXPHunter: 'Ҷамъкунандаи XP',
     },
     // Top-up
     topup: {
