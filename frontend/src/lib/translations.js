@@ -87,9 +87,18 @@ export const translations = {
       password: 'Рамз',
       confirmPassword: 'Рамзро тасдиқ кунед',
       name: 'Ном',
+      namePlaceholder: 'Номи шумо',
       orContinueWith: 'ё давом диҳед бо',
       continueGoogle: 'Бо Google давом диҳед',
       demoAccount: 'Аккаунти намоишӣ',
+      createAccount: 'Аккаунт созед',
+      fillAllFields: 'Ҳамаи майдонҳоро пур кунед',
+      passwordsNoMatch: 'Рамзҳо мувофиқ нестанд',
+      passwordTooShort: 'Рамз бояд ҳадди ақал 6 аломат бошад',
+      welcomeBack: 'Хуш омадед!',
+      accountCreated: 'Аккаунт сохта шуд!',
+      loginFailed: 'Вуруд ноком шуд',
+      registerFailed: 'Бақайдгирӣ ноком шуд',
     },
     // Profile
     profile: {
