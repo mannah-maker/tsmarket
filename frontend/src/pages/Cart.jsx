@@ -72,16 +72,16 @@ export const Cart = () => {
   return (
     <div className="min-h-screen tsmarket-gradient py-8" data-testid="cart-page">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">Shopping Cart</h1>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">{t('cart.title')}</h1>
 
         {items.length === 0 ? (
           <div className="empty-state tsmarket-card p-12">
             <ShoppingBag className="empty-state-icon" />
-            <h3 className="text-xl font-bold mb-2">Your cart is empty</h3>
-            <p className="text-muted-foreground mb-6">Start shopping to earn XP and rewards!</p>
+            <h3 className="text-xl font-bold mb-2">{t('cart.empty')}</h3>
+            <p className="text-muted-foreground mb-6">{t('cart.startShopping')}</p>
             <Link to="/catalog">
               <Button className="tsmarket-btn-primary rounded-full px-8" data-testid="start-shopping-btn">
-                Browse Catalog
+                {t('cart.browseCatalog')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
