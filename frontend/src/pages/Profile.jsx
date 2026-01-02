@@ -202,6 +202,13 @@ export const Profile = () => {
                       </p>
                     </div>
                   </div>
+                  
+                  {order.delivery_address && (
+                    <div className="mt-2 p-2 bg-muted/30 rounded-lg text-sm">
+                      <span className="text-muted-foreground">📍 {t('cart.deliveryAddress')}:</span>
+                      <p className="font-medium">{order.delivery_address}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
