@@ -122,6 +122,10 @@ class CartItem(BaseModel):
     quantity: int = 1
     size: Optional[str] = None
 
+class CreateOrderRequest(BaseModel):
+    items: List['CartItem']
+    delivery_address: str
+
 class OrderItem(BaseModel):
     product_id: str
     product_name: str
