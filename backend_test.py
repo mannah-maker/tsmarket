@@ -40,16 +40,17 @@ class TSMarketAPITester:
         
         try:
             if method == 'GET':
-                response = self.session.get(url, headers=request_headers, params=params)
+                response = self.session.get(url, headers=request_headers, params=params, timeout=30)
             elif method == 'POST':
-                response = self.session.post(url, json=data, headers=request_headers, params=params)
+                response = self.session.post(url, json=data, headers=request_headers, params=params, timeout=30)
             elif method == 'PUT':
-                response = self.session.put(url, json=data, headers=request_headers, params=params)
+                response = self.session.put(url, json=data, headers=request_headers, params=params, timeout=30)
             elif method == 'DELETE':
-                response = self.session.delete(url, headers=request_headers, params=params)
+                response = self.session.delete(url, headers=request_headers, params=params, timeout=30)
             
             return response
         except Exception as e:
+            print(f"Request failed: {str(e)}")
             return None
 
     def test_database_seeding(self):
