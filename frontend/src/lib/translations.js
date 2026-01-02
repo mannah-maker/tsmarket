@@ -304,6 +304,14 @@ export const translations = {
       checkout: 'Оформить заказ',
       clearCart: 'Очистить корзину',
       continueShopping: 'Продолжить покупки',
+      deliveryAddress: 'Адрес доставки',
+      addressPlaceholder: 'Город, улица, дом, квартира...',
+      enterAddress: 'Введите адрес доставки',
+      pleaseLogin: 'Войдите для оформления заказа',
+      insufficientBalance: 'Недостаточно средств. Пополните баланс.',
+      levelUp: 'Новый уровень!',
+      orderComplete: 'Заказ оформлен!',
+      checkoutFailed: 'Ошибка оформления заказа',
     },
     // Auth
     auth: {
