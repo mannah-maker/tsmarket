@@ -200,13 +200,16 @@ class TSMarketAPITester:
         
         # Create order with first product
         first_product = products[0]
-        order_data = [
-            {
-                "product_id": first_product["product_id"],
-                "quantity": 1,
-                "size": first_product["sizes"][0] if first_product.get("sizes") else None
-            }
-        ]
+        order_data = {
+            "items": [
+                {
+                    "product_id": first_product["product_id"],
+                    "quantity": 1,
+                    "size": first_product["sizes"][0] if first_product.get("sizes") else None
+                }
+            ],
+            "delivery_address": "г. Душанбе, ул. Ленина 15, кв 42"
+        }
         
         response = self.make_request('POST', 'orders', order_data, token=self.user_token)
         if response and response.status_code in [200, 201]:
@@ -223,6 +226,132 @@ class TSMarketAPITester:
                 return True
         
         self.log_test("Create order", False, f"Status: {response.status_code if response else 'No response'}")
+        return False
+
+    def test_delivery_address_validation(self):
+        """Test delivery address validation in checkout process"""
+        print("\n🏠 Testing Delivery Address Validation...")
+        
+        if not self.admin_token:
+            self.log_test("Delivery address validation (no admin token)", False, "Admin not logged in")
+            return False
+        
+        # Get products first
+        products_response = self.make_request('GET', 'products')
+        if not products_response or products_response.status_code != 200:
+            self.log_test("Delivery address validation (no products)", False, "Cannot get products")
+            return False
+        
+        products = products_response.json()
+        if not products:
+            self.log_test("Delivery address validation (empty products)", False, "No products available")
+            return False
+        
+        # Use prod_001 as specified in the test request
+        test_product = None
+        for product in products:
+            if product["product_id"] == "prod_001":
+                test_product = product
+                break
+        
+        if not test_product:
+            # Fallback to first product if prod_001 not found
+            test_product = products[0]
+        
+        # Test 1: Order WITHOUT delivery address - should fail
+        order_data_no_address = {
+            "items": [
+                {
+                    "product_id": test_product["product_id"],
+                    "quantity": 1
+                }
+            ]
+            # No delivery_address field
+        }
+        
+        response = self.make_request('POST', 'orders', order_data_no_address, token=self.admin_token)
+        if response and response.status_code == 400:
+            error_detail = response.json().get('detail', '')
+            if 'Delivery address is required' in error_detail:
+                self.log_test("Order without delivery address (should fail)", True)
+            else:
+                self.log_test("Order without delivery address (should fail)", False, f"Wrong error message: {error_detail}")
+        else:
+            self.log_test("Order without delivery address (should fail)", False, f"Expected 400 error, got: {response.status_code if response else 'No response'}")
+        
+        # Test 2: Order with empty delivery address - should fail
+        order_data_empty_address = {
+            "items": [
+                {
+                    "product_id": test_product["product_id"],
+                    "quantity": 1
+                }
+            ],
+            "delivery_address": ""
+        }
+        
+        response = self.make_request('POST', 'orders', order_data_empty_address, token=self.admin_token)
+        if response and response.status_code == 400:
+            error_detail = response.json().get('detail', '')
+            if 'Delivery address is required' in error_detail:
+                self.log_test("Order with empty delivery address (should fail)", True)
+            else:
+                self.log_test("Order with empty delivery address (should fail)", False, f"Wrong error message: {error_detail}")
+        else:
+            self.log_test("Order with empty delivery address (should fail)", False, f"Expected 400 error, got: {response.status_code if response else 'No response'}")
+        
+        # Test 3: Order with short address (less than 5 chars) - should fail
+        order_data_short_address = {
+            "items": [
+                {
+                    "product_id": test_product["product_id"],
+                    "quantity": 1
+                }
+            ],
+            "delivery_address": "123"
+        }
+        
+        response = self.make_request('POST', 'orders', order_data_short_address, token=self.admin_token)
+        if response and response.status_code == 400:
+            error_detail = response.json().get('detail', '')
+            if 'Delivery address is required' in error_detail:
+                self.log_test("Order with short delivery address (should fail)", True)
+            else:
+                self.log_test("Order with short delivery address (should fail)", False, f"Wrong error message: {error_detail}")
+        else:
+            self.log_test("Order with short delivery address (should fail)", False, f"Expected 400 error, got: {response.status_code if response else 'No response'}")
+        
+        # Test 4: Order with valid address - should succeed
+        order_data_valid_address = {
+            "items": [
+                {
+                    "product_id": test_product["product_id"],
+                    "quantity": 1
+                }
+            ],
+            "delivery_address": "г. Душанбе, ул. Ленина 15, кв 42"
+        }
+        
+        response = self.make_request('POST', 'orders', order_data_valid_address, token=self.admin_token)
+        if response and response.status_code in [200, 201]:
+            order_result = response.json()
+            if 'order' in order_result and order_result['order'].get('delivery_address') == "г. Душанбе, ул. Ленина 15, кв 42":
+                self.log_test("Order with valid delivery address (should succeed)", True)
+                return True
+            else:
+                self.log_test("Order with valid delivery address (should succeed)", False, "Order created but delivery address not saved correctly")
+        else:
+            # Check if it's a balance issue
+            if response and response.status_code == 400:
+                error_detail = response.json().get('detail', '')
+                if 'balance' in error_detail.lower():
+                    self.log_test("Order with valid delivery address (should succeed)", True, "Insufficient balance but address validation passed")
+                    return True
+                else:
+                    self.log_test("Order with valid delivery address (should succeed)", False, f"Unexpected error: {error_detail}")
+            else:
+                self.log_test("Order with valid delivery address (should succeed)", False, f"Status: {response.status_code if response else 'No response'}")
+        
         return False
 
     def test_user_profile(self):
