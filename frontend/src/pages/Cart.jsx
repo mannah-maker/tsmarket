@@ -1,32 +1,42 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ordersAPI } from '../lib/api';
-import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Wallet, Sparkles, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Wallet, Sparkles, ShoppingBag, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const Cart = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, refreshUser } = useAuth();
   const { items, removeItem, updateQuantity, clearCart, total, totalXP } = useCart();
+  const { t } = useLanguage();
   const [loading, setLoading] = React.useState(false);
+  const [deliveryAddress, setDeliveryAddress] = React.useState('');
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
-      toast.error('Please login to checkout');
+      toast.error(t('cart.pleaseLogin'));
       navigate('/auth');
       return;
     }
 
     if (items.length === 0) {
-      toast.error('Your cart is empty');
+      toast.error(t('cart.empty'));
+      return;
+    }
+
+    if (!deliveryAddress || deliveryAddress.trim().length < 5) {
+      toast.error(t('cart.enterAddress'));
       return;
     }
 
     if ((user?.balance || 0) < total) {
-      toast.error('Insufficient balance. Please top up your account.');
+      toast.error(t('cart.insufficientBalance'));
       return;
     }
 
@@ -38,19 +48,20 @@ export const Cart = () => {
         size: item.size,
       }));
 
-      const res = await ordersAPI.create(orderItems);
+      const res = await ordersAPI.create(orderItems, deliveryAddress.trim());
       const { xp_gained, level_up, new_level } = res.data;
 
       clearCart();
+      setDeliveryAddress('');
       await refreshUser();
 
       if (level_up) {
-        toast.success(`Level Up! You're now level ${new_level}! 🎉`);
+        toast.success(`${t('cart.levelUp')} ${new_level}! 🎉`);
       }
-      toast.success(`Order completed! You earned ${xp_gained} XP!`);
+      toast.success(`${t('cart.orderComplete')} +${xp_gained} XP!`);
       navigate('/profile');
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Checkout failed');
+      toast.error(error.response?.data?.detail || t('cart.checkoutFailed'));
     } finally {
       setLoading(false);
     }
