@@ -277,6 +277,7 @@ export const Auth = () => {
 export const AuthCallback = () => {
   const navigate = useNavigate();
   const { processGoogleAuth } = useAuth();
+  const { t } = useLanguage();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -291,10 +292,10 @@ export const AuthCallback = () => {
         const sessionId = sessionIdMatch[1];
         try {
           await processGoogleAuth(sessionId);
-          toast.success('Welcome to TSMarket!');
+          toast.success(t('auth.welcomeBack'));
           navigate('/profile', { replace: true });
         } catch (error) {
-          toast.error('Authentication failed');
+          toast.error(t('auth.loginFailed'));
           navigate('/auth', { replace: true });
         }
       } else {
@@ -303,7 +304,7 @@ export const AuthCallback = () => {
     };
 
     processSession();
-  }, [navigate, processGoogleAuth]);
+  }, [navigate, processGoogleAuth, t]);
 
   return (
     <div className="min-h-screen tsmarket-gradient flex items-center justify-center">
