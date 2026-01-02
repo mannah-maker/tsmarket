@@ -203,15 +203,18 @@ frontend:
 
   - task: "Top-Up System"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/TopUp.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Manual top-up system with receipt upload and admin approval"
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED: Top-up receipt upload functionality working correctly. Successfully logged in with admin@tsmarket.com/admin123, navigated to top-up page via user menu. Amount input accepts values (tested with 1000), file upload functionality works with receipt preview appearing after file selection, submit button enables after both amount and file are provided. Authentication properly required for top-up access (redirects to login when not authenticated). All core top-up features are functional."
 
 backend:
   - task: "Authentication API"
