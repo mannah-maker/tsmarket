@@ -79,6 +79,14 @@ export const translations = {
       checkout: 'Пардохт',
       clearCart: 'Сабадро тоза кунед',
       continueShopping: 'Харидро идома диҳед',
+      deliveryAddress: 'Суроғаи расонидан',
+      addressPlaceholder: 'Шаҳр, кӯча, хона, ошёна...',
+      enterAddress: 'Суроғаи расониданро ворид кунед',
+      pleaseLogin: 'Барои харид ворид шавед',
+      insufficientBalance: 'Баланс кам аст. Пур кунед.',
+      levelUp: 'Сатҳи нав!',
+      orderComplete: 'Фармоиш иҷро шуд!',
+      checkoutFailed: 'Хатогӣ дар пардохт',
     },
     // Auth
     auth: {
