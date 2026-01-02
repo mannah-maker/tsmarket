@@ -50,6 +50,7 @@ export const translations = {
       noProducts: 'Маҳсулот ёфт нашуд',
       addToCart: 'Ба сабад илова кунед',
       sizes: 'андоза',
+      adjustFilters: 'Филтрҳоро тағйир диҳед',
     },
     // Product
     product: {
