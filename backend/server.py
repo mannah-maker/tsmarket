@@ -138,6 +138,7 @@ class Order(BaseModel):
     total: float
     total_xp: int
     status: str = "completed"
+    delivery_address: str = ""
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class TopUpCode(BaseModel):
